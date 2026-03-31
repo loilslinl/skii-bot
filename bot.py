@@ -1973,9 +1973,11 @@ def main():
 
     print("🎿 Skii Pro Signals — Continuous scanner running 24/7...")
 
-    # Start stats API server
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(start_api_server())
+    # Start stats API server inside the same event loop as the bot
+    async def post_init(app):
+        await start_api_server()
+
+    app.post_init = post_init
 
     app.run_polling(
         drop_pending_updates=True,
